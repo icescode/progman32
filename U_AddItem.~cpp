@@ -1,0 +1,150 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#include <IniFiles.hpp>
+#pragma hdrstop
+
+#include "U_AddItem.h"
+#include "U_Group.h"  // Butuh ini untuk casting ke TfrmGroup
+
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TfrmAddItem *frmAddItem;
+
+__fastcall TfrmAddItem::TfrmAddItem(TComponent* Owner): TForm(Owner)
+{
+}
+AnsiString __fastcall TfrmAddItem::GetWinDir()
+{
+    char buffer[MAX_PATH];
+    ::GetWindowsDirectory(buffer, MAX_PATH);
+
+    AnsiString path = AnsiString(buffer);
+    if (path.LastDelimiter("\\") != path.Length()) {
+        path = path + "\\";
+    }
+    return path;
+}
+
+AnsiString __fastcall TfrmAddItem::FormatTitle(AnsiString FileName)
+{
+    // 1. Buang Extension (.exe)
+    int dotPos = FileName.Pos(".");
+    if (dotPos > 0) {
+        FileName = FileName.SubString(1, dotPos - 1);
+    }
+
+    // 2. Ambil huruf pertama, jadikan UpperCase
+    if (FileName.Length() > 0) {
+        AnsiString FirstLetter = FileName.SubString(1, 1).UpperCase();
+        AnsiString Rest = FileName.SubString(2, FileName.Length() - 1).LowerCase();
+        FileName = FirstLetter + Rest;
+    }
+
+    return FileName;
+}
+
+/*
+  form name : frmAddItem
+  AutoCreate False
+  fldPath (TEdit)
+  fldTitle (TEdit)
+  btnCancel TButton
+  btnSave TButton
+  btnOpenFileDialog TButton
+  OpenDialog TOpenDialog
+
+*/
+void __fastcall TfrmAddItem::btnCancelClick(TObject *Sender)
+{
+    Close();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfrmAddItem::btnSaveClick(TObject *Sender)
+{
+    // 1. CEK APAKAH CALLER GROUP TERSEDIA
+    if (!CallerGroup) {
+        return;
+    }
+
+    // 2. VALIDASI INPUT & NORMALISASI PATH
+    AnsiString FullPath = fldPath->Text.Trim();
+    AnsiString Title = fldTitle->Text.Trim();
+
+    if (Title.Length() == 0 || FullPath.Length() == 0) {
+        Application->MessageBox("Title and Path cannot be empty!", "Error", MB_OK | MB_ICONERROR);
+        return;
+    }
+
+    // BUG FIX: Jika user hanya memasukkan nama file (misal: notepad.exe), 
+    // paksa menjadi Absolute Path menggunakan direktori Windows agar Icon & Execute tidak fail.
+    if (FullPath.Pos(":\\") == 0) { 
+        FullPath = GetWinDir() + FullPath;
+    }
+
+    if (!FileExists(FullPath)) {
+        Application->MessageBox(("File not found: " + FullPath).c_str(), "Error", MB_OK | MB_ICONERROR);
+        return;
+    }
+
+    // 3. TENTUKAN LOKASI FILE .GRP (Berdasarkan Caption MDI Child yang aktif)
+    AnsiString WinDir = GetWinDir(); 
+    AnsiString GrpFileName = CallerGroup->Caption; 
+    AnsiString FullGrpPath = WinDir + GrpFileName;
+
+    // Cek fallback jika file .grp tidak ada di folder Windows
+    if (!FileExists(FullGrpPath)) {
+        FullGrpPath = ExtractFilePath(Application->ExeName) + GrpFileName;
+    }
+
+    // 4. OPERASI FILE INI (.GRP)
+    TIniFile *ini = new TIniFile(FullGrpPath);
+    TStringList *ItemList = new TStringList();
+
+    try {
+        // Ambil semua entry di section [Items] untuk menentukan index berikutnya
+        ini->ReadSection("Items", ItemList);
+        
+        int NextIndex = ItemList->Count + 1;
+        AnsiString NewKey = "item" + IntToStr(NextIndex);
+        
+        // Simpan dengan format standar: Judul,FullPath,0
+        // Penggunaan FullPath di sini menjamin ShellExecute dan ExtractIcon bekerja 100%
+        ini->WriteString("Items", NewKey, Title + "," + FullPath + ",0");
+        
+        // Hapus objek untuk Flush ke Disk (Penting agar file tidak locked)
+        delete ini;
+        ini = NULL;
+
+        // 5. REFRESH TAMPILAN GROUP
+        // Memanggil fungsi load pada MDI Child yang memicu form ini
+        CallerGroup->LoadItemsFromGrp(FullGrpPath);
+        
+        Application->MessageBox("Item added successfully!", "Success", MB_OK | MB_ICONINFORMATION);
+        
+        // Tutup form Add Item dan kirim sinyal sukses
+        ModalResult = mrOk;
+    }
+    __finally {
+        if (ini) delete ini;
+        if (ItemList) delete ItemList;
+    }
+}
+void __fastcall TfrmAddItem::btnOpenFileDialogClick(TObject *Sender)
+{
+    // Set filter hanya untuk EXE sebelum dibuka
+    openDialog->Filter = "Executable Files (*.exe)|*.exe";
+
+    if (openDialog->Execute())
+    {
+        // 1. Isi fldPath dengan path absolut lengkap
+        fldPath->Text = openDialog->FileName;
+
+        // 2. Ambil nama filenya saja tanpa path
+        AnsiString OnlyName = ExtractFileName(openDialog->FileName);
+
+        // 3. Format nama tersebut dan masukkan ke fldTitle
+        fldTitle->Text = FormatTitle(OnlyName);
+    }
+}

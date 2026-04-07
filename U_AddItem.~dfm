@@ -1,0 +1,92 @@
+object frmAddItem: TfrmAddItem
+  Left = 163
+  Top = 690
+  BorderStyle = bsDialog
+  Caption = 'Add Item'
+  ClientHeight = 110
+  ClientWidth = 392
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -13
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poScreenCenter
+  PixelsPerInch = 120
+  TextHeight = 16
+  object Label1: TLabel
+    Left = 13
+    Top = 12
+    Width = 55
+    Height = 16
+    Alignment = taRightJustify
+    Caption = 'App Path'
+  end
+  object Label2: TLabel
+    Left = 42
+    Top = 44
+    Width = 26
+    Height = 16
+    Alignment = taRightJustify
+    Caption = 'Title'
+  end
+  object btnOpenFileDialog: TSpeedButton
+    Left = 360
+    Top = 11
+    Width = 23
+    Height = 22
+    Glyph.Data = {
+      76010000424D7601000000000000760000002800000020000000100000000100
+      04000000000000010000120B0000120B00001000000000000000000000000000
+      800000800000008080008000000080008000808000007F7F7F00BFBFBF000000
+      FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00555555555555
+      5555555555555555555555555555555555555555555555555555555555555555
+      555555555555555555555555555555555555555FFFFFFFFFF555550000000000
+      55555577777777775F55500B8B8B8B8B05555775F555555575F550F0B8B8B8B8
+      B05557F75F555555575F50BF0B8B8B8B8B0557F575FFFFFFFF7F50FBF0000000
+      000557F557777777777550BFBFBFBFB0555557F555555557F55550FBFBFBFBF0
+      555557F555555FF7555550BFBFBF00055555575F555577755555550BFBF05555
+      55555575FFF75555555555700007555555555557777555555555555555555555
+      5555555555555555555555555555555555555555555555555555}
+    NumGlyphs = 2
+    OnClick = btnOpenFileDialogClick
+  end
+  object fldPath: TEdit
+    Left = 80
+    Top = 8
+    Width = 277
+    Height = 24
+    TabOrder = 0
+  end
+  object fldTitle: TEdit
+    Left = 80
+    Top = 40
+    Width = 303
+    Height = 24
+    TabOrder = 1
+  end
+  object btnCancel: TButton
+    Left = 218
+    Top = 75
+    Width = 75
+    Height = 25
+    Caption = '&Cancel'
+    TabOrder = 2
+    OnClick = btnCancelClick
+  end
+  object btnSave: TButton
+    Left = 309
+    Top = 75
+    Width = 75
+    Height = 25
+    Caption = '&Save'
+    TabOrder = 3
+    OnClick = btnSaveClick
+  end
+  object openDialog: TOpenDialog
+    DefaultExt = '*.exe'
+    Left = 136
+    Top = 64
+  end
+end
