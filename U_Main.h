@@ -1,3 +1,7 @@
+/*
+  Replication progman 3.11 to windows 32 bit
+  CopyLeft MIT License Hardiyanto April 2026
+*/
 #ifndef U_MainH
 #define U_MainH
 #include <Classes.hpp>
@@ -34,16 +38,24 @@ __published:
     void __fastcall FormShow(TObject *Sender);
     void __fastcall Reload1Click(TObject *Sender);
     void __fastcall Open1Click(TObject *Sender);
+    void __fastcall FormResize(TObject *Sender);
 
 private:
 
+    int LastLayoutMode; // 0: None, 1: Cascade, 2: TileV, 3: TileH
     void __fastcall LoadItemsFromGrp(AnsiString FileName);
     TfrmGroup* __fastcall FindGroupWindow(AnsiString Caption);
     AnsiString __fastcall GetWinDir();
-public:
-
-    __fastcall TfrmMain(TComponent* Owner);
     void __fastcall LoadGroupsFromIni();
+    void __fastcall WMExitSizeMove(TMessage &Message);
+    void __fastcall ApplyMBoxLayout();
+
+public:
+    __fastcall TfrmMain(TComponent* Owner);
+
+    BEGIN_MESSAGE_MAP
+        VCL_MESSAGE_HANDLER(WM_EXITSIZEMOVE, TMessage, WMExitSizeMove)
+    END_MESSAGE_MAP(TForm)
 };
 extern PACKAGE TfrmMain *frmMain;
 

@@ -1,9 +1,9 @@
 object frmAddItem: TfrmAddItem
-  Left = 163
-  Top = 690
+  Left = 534
+  Top = 616
   BorderStyle = bsDialog
   Caption = 'Add Item'
-  ClientHeight = 110
+  ClientHeight = 105
   ClientWidth = 392
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -86,7 +86,7 @@ object frmAddItem: TfrmAddItem
   end
   object openDialog: TOpenDialog
     DefaultExt = '*.exe'
-    Left = 136
-    Top = 64
+    Left = 16
+    Top = 56
   end
 end

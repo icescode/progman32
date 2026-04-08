@@ -1,3 +1,7 @@
+/*
+  Replication progman 3.11 to windows 32 bit
+  CopyLeft MIT License Hardiyanto April 2026
+*/
 #ifndef U_CreateGroupH
 #define U_CreateGroupH
 #include <Classes.hpp>
@@ -16,7 +20,7 @@ __published:
     void __fastcall btnSaveClick(TObject *Sender);
 
 private:
-    AnsiString __fastcall GetWinDir(); // Helper untuk cari folder Windows
+    AnsiString __fastcall GetWinDir();
 
 public:		
     __fastcall TfrmCreateGroup(TComponent* Owner);

@@ -1,3 +1,7 @@
+/*
+  Replication progman 3.11 to windows 32 bit
+  CopyLeft MIT License Hardiyanto April 2026
+*/
 #include <vcl.h>
 #include <IniFiles.hpp>
 #pragma hdrstop
@@ -12,9 +16,6 @@ __fastcall TfrmCreateGroup::TfrmCreateGroup(TComponent* Owner): TForm(Owner)
 {
 }
 
-//---------------------------------------------------------------------------
-// Helper: Mendapatkan direktori Windows (C:\WINDOWS\)
-//---------------------------------------------------------------------------
 AnsiString __fastcall TfrmCreateGroup::GetWinDir()
 {
     char buffer[MAX_PATH];
@@ -26,29 +27,19 @@ AnsiString __fastcall TfrmCreateGroup::GetWinDir()
     return path;
 }
 
-//---------------------------------------------------------------------------
-// Validasi Input: Hanya allow A-Z, a-z, dan Spasi
-//---------------------------------------------------------------------------
-
-
 void __fastcall TfrmCreateGroup::btnCancelClick(TObject *Sender)
 {
     Close();
 }
-//---------------------------------------------------------------------------
-
 
 void __fastcall TfrmCreateGroup::btnSaveClick(TObject *Sender)
 {
     AnsiString GroupName = fldTitle->Text.Trim();
     
-    // 1. Cek apakah kosong
     if (GroupName.Length() == 0) {
         return; 
     }
 
-    // 2. Validasi Karakter (Hanya A-Z, a-z, 0-9, dan Spasi)
-    // Kita cek satu-persatu karakternya
     for (int i = 1; i <= GroupName.Length(); i++) {
         char c = GroupName[i];
         bool isValid = (c >= 'A' && c <= 'Z') || 
@@ -63,21 +54,18 @@ void __fastcall TfrmCreateGroup::btnSaveClick(TObject *Sender)
         }
     }
 
-    // --- JIKA LOLOS VALIDASI, LANJUT KE PROSES FILE ---
-
     AnsiString WinDir = GetWinDir();
     AnsiString GrpFileName = GroupName + ".grp";
     AnsiString FullGrpPath = WinDir + GrpFileName;
     AnsiString IniPath = WinDir + "oldcat.ini";
 
-    // 3. Cek apakah file sudah ada
     if (FileExists(FullGrpPath)) {
         Application->MessageBox("Group already exist please create a new name..",
                                 "Duplicate", MB_OK | MB_ICONWARNING);
         return;
     }
 
-    // 4. Buat file .grp baru
+
     TStringList *NewGrp = new TStringList();
     try {
         NewGrp->Add("[Items]");
@@ -90,7 +78,6 @@ void __fastcall TfrmCreateGroup::btnSaveClick(TObject *Sender)
     }
     delete NewGrp;
 
-    // 5. Update oldcat.ini
     if (FileExists(IniPath)) {
         TIniFile *ini = new TIniFile(IniPath);
         TStringList *CurrentGroups = new TStringList();

@@ -1,6 +1,6 @@
 object frmMain: TfrmMain
-  Left = 457
-  Top = 345
+  Left = 867
+  Top = 426
   Width = 523
   Height = 323
   Caption = 'Program Manager'
@@ -15,6 +15,7 @@ object frmMain: TfrmMain
   OldCreateOrder = False
   Position = poScreenCenter
   WindowMenu = Window1
+  OnResize = FormResize
   OnShow = FormShow
   PixelsPerInch = 120
   TextHeight = 16

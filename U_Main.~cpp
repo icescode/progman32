@@ -1,3 +1,8 @@
+/*
+  Replication progman 3.11 to windows 32 bit
+  CopyLeft MIT License Hardiyanto April 2026
+*/
+
 #include <vcl.h>
 #include <IniFiles.hpp>
 #pragma hdrstop
@@ -12,7 +17,7 @@
 TfrmMain *frmMain;
 
 __fastcall TfrmMain::TfrmMain(TComponent* Owner) : TForm(Owner){
-
+    LastLayoutMode = 0;
 }
 
 TfrmGroup* __fastcall TfrmMain::FindGroupWindow(AnsiString Caption) {
@@ -55,7 +60,6 @@ void __fastcall TfrmMain::LoadGroupsFromIni()
             AnsiString GroupFileName = GroupList->Values[GroupList->Names[i]];
             AnsiString FullGroupPath = "";
 
-            // Cari lokasi file .GRP
             if (GroupFileName.Pos(":") == 0) {
                 AnsiString PathInWin = GetWinDir() + GroupFileName;
                 AnsiString PathInExe = ExtractFilePath(Application->ExeName) + GroupFileName;
@@ -72,17 +76,14 @@ void __fastcall TfrmMain::LoadGroupsFromIni()
             if (FullGroupPath != "" && FileExists(FullGroupPath)) {
                 AnsiString GRPTitle = ExtractFileName(FullGroupPath);
 
-                // --- PROSES VALIDASI AGAR TIDAK DOUBLE ---
                 TfrmGroup *ExistingChild = FindGroupWindow(GRPTitle);
 
                 if (ExistingChild) {
-                    // Jika sudah ada, tampilkan ke depan saja
                     ExistingChild->BringToFront();
                     if (ExistingChild->WindowState == wsMinimized) {
                         ExistingChild->WindowState = wsNormal;
                     }
                 } else {
-                    // Jika belum ada, baru buat instance baru
                     TfrmGroup *Child = new TfrmGroup(this);
                     Child->Caption = GRPTitle;
                     Child->LoadItemsFromGrp(FullGroupPath);
@@ -99,17 +100,19 @@ void __fastcall TfrmMain::LoadGroupsFromIni()
 
 void __fastcall TfrmMain::Cascade1Click(TObject *Sender)
 {
+    LastLayoutMode = 1;
     this->Cascade();
 }
 
 void __fastcall TfrmMain::TileVertically1Click(TObject *Sender)
 {
+    LastLayoutMode = 2;
     this->TileMode = tbVertical;
-    this->Tile();
-}
+    this->Tile();}
 
 void __fastcall TfrmMain::TileHorixzontally1Click(TObject *Sender)
 {
+    LastLayoutMode = 3;
     this->TileMode = tbHorizontal;
     this->Tile();
 }
@@ -129,7 +132,6 @@ void __fastcall TfrmMain::Open1Click(TObject *Sender)
     TfrmCreateGroup *CreateForm = new TfrmCreateGroup(this);
         try {
             if (CreateForm->ShowModal() == mrOk) {
-            // Jika sukses membuat group, reload daftar di Main Form
                 LoadGroupsFromIni();
             }
         }
@@ -137,5 +139,43 @@ void __fastcall TfrmMain::Open1Click(TObject *Sender)
             delete CreateForm;
         }
 }
-//---------------------------------------------------------------------------
 
+void __fastcall TfrmMain::WMExitSizeMove(TMessage &Message)
+{
+    if (MDIChildCount > 0 && LastLayoutMode > 0)
+    {
+        ApplyMBoxLayout();
+    }
+    TForm::Dispatch(&Message);
+}
+
+void __fastcall TfrmMain::FormResize(TObject *Sender)
+{
+    static TWindowState LastState = wsNormal;
+
+    if (WindowState != LastState)
+    {
+        if (MDIChildCount > 0 && LastLayoutMode > 0)
+        {
+            ApplyMBoxLayout();
+        }
+        LastState = WindowState;
+    }
+}
+
+
+void __fastcall TfrmMain::ApplyMBoxLayout()
+{
+    LockWindowUpdate(Handle);
+    try {
+        switch(LastLayoutMode)
+        {
+            case 1: this->Cascade(); break;
+            case 2: this->TileMode = tbVertical; this->Tile(); break;
+            case 3: this->TileMode = tbHorizontal; this->Tile(); break;
+        }
+    }
+    __finally {
+        LockWindowUpdate(NULL);
+    }
+}

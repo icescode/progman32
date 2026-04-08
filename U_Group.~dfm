@@ -28,6 +28,7 @@ object frmGroup: TfrmGroup
     LargeImages = imgIcons
     ReadOnly = True
     TabOrder = 0
+    OnContextPopup = lvIconsContextPopup
     OnDblClick = lvIconsDblClick
     OnDeletion = lvIconsDeletion
   end
