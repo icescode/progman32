@@ -12,29 +12,29 @@
 #include <Buttons.hpp>
 #include <Dialogs.hpp>
 #include <ComCtrls.hpp>
-class TfrmGroup;
+class TFormGroup;
 
-class TfrmAddItem : public TForm
+class TFormAddItem : public TForm
 {
-__published:	
-    TEdit *fldPath;
+__published:
+    TEdit *FieldPath;
     TLabel *Label1;
     TLabel *Label2;
-    TEdit *fldTitle;
-    TButton *btnCancel;
-    TButton *btnSave;
-    TSpeedButton *btnOpenFileDialog;
-    TOpenDialog *openDialog;
-    void __fastcall btnCancelClick(TObject *Sender);
-    void __fastcall btnSaveClick(TObject *Sender);
-    void __fastcall btnOpenFileDialogClick(TObject *Sender);
+    TEdit *FieldTitle;
+    TButton *ButtonCancel;
+    TButton *ButtonSave;
+    TSpeedButton *ButtonOpenFileDialog;
+    TOpenDialog *OpenDialog;
+    void __fastcall ButtonCancelClick(TObject *Sender);
+    void __fastcall ButtonSaveClick(TObject *Sender);
+    void __fastcall ButtonOpenFileDialogClick(TObject *Sender);
 private:	
     AnsiString __fastcall FormatTitle(AnsiString FileName);
-    AnsiString __fastcall GetWinDir();
-public:		
-    __fastcall TfrmAddItem(TComponent* Owner);
-    TfrmGroup *CallerGroup;
+    AnsiString __fastcall GetCurAppDir();
+public:
+    __fastcall TFormAddItem(TComponent* Owner);
+    TFormGroup *CallerGroup;
 };
-extern PACKAGE TfrmAddItem *frmAddItem;
+extern PACKAGE TFormAddItem *FormAddItem;
 
 #endif

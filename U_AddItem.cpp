@@ -11,24 +11,23 @@
 
 #pragma package(smart_init)
 #pragma resource "*.dfm"
-TfrmAddItem *frmAddItem;
 
-__fastcall TfrmAddItem::TfrmAddItem(TComponent* Owner): TForm(Owner)
+TFormAddItem *FormAddItem;
+
+__fastcall TFormAddItem::TFormAddItem(TComponent* Owner): TForm(Owner)
 {
 }
-AnsiString __fastcall TfrmAddItem::GetWinDir()
-{
-    char buffer[MAX_PATH];
-    ::GetWindowsDirectory(buffer, MAX_PATH);
 
-    AnsiString path = AnsiString(buffer);
+AnsiString __fastcall TFormAddItem::GetCurAppDir()
+{
+    AnsiString path = ExtractFilePath(Application->ExeName);
+
     if (path.LastDelimiter("\\") != path.Length()) {
         path = path + "\\";
     }
     return path;
 }
-
-AnsiString __fastcall TfrmAddItem::FormatTitle(AnsiString FileName)
+AnsiString __fastcall TFormAddItem::FormatTitle(AnsiString FileName)
 {
 
     int dotPos = FileName.Pos(".");
@@ -45,42 +44,36 @@ AnsiString __fastcall TfrmAddItem::FormatTitle(AnsiString FileName)
     return FileName;
 }
 
-void __fastcall TfrmAddItem::btnCancelClick(TObject *Sender)
+void __fastcall TFormAddItem::ButtonCancelClick(TObject *Sender)
 {
     Close();
 }
 
-void __fastcall TfrmAddItem::btnSaveClick(TObject *Sender)
+void __fastcall TFormAddItem::ButtonSaveClick(TObject *Sender)
 {
-    if (!CallerGroup) {
-        return;
-    }
+    AnsiString Title = FieldTitle->Text.Trim();
+    AnsiString FullPath = FieldPath->Text.Trim();
 
-    AnsiString FullPath = fldPath->Text.Trim();
-    AnsiString Title = fldTitle->Text.Trim();
-
-    if (Title.Length() == 0 || FullPath.Length() == 0) {
-        Application->MessageBox("Title and Path cannot be empty!", "Error", MB_OK | MB_ICONERROR);
-        return;
-    }
-
-    if (FullPath.Pos(":\\") == 0) {
-        FullPath = GetWinDir() + FullPath;
-    }
+    if (Title.IsEmpty() || FullPath.IsEmpty()) return;
 
     if (!FileExists(FullPath)) {
         Application->MessageBox(("File not found: " + FullPath).c_str(), "Error", MB_OK | MB_ICONERROR);
         return;
     }
 
-    AnsiString WinDir = GetWinDir();
-    AnsiString GrpFileName = CallerGroup->Caption;
-    AnsiString FullGrpPath = WinDir + GrpFileName;
+
+    AnsiString AppDir = GetCurAppDir();
+    AnsiString GrpFileName = CallerGroup->Caption + ".grp";
+    AnsiString FullGrpPath = AppDir + GrpFileName;
 
     if (!FileExists(FullGrpPath)) {
         FullGrpPath = ExtractFilePath(Application->ExeName) + GrpFileName;
     }
 
+    if (!FileExists(FullGrpPath)) {
+        Application->MessageBox(("Group file not found: " + GrpFileName).c_str(), "Error", MB_OK | MB_ICONERROR);
+        return;
+    }
 
     TIniFile *ini = new TIniFile(FullGrpPath);
     TStringList *ItemList = new TStringList();
@@ -91,18 +84,12 @@ void __fastcall TfrmAddItem::btnSaveClick(TObject *Sender)
 
         int NextIndex = ItemList->Count + 1;
         AnsiString NewKey = "item" + IntToStr(NextIndex);
-
         ini->WriteString("Items", NewKey, Title + "," + FullPath + ",0");
-
-
         delete ini;
         ini = NULL;
-
         CallerGroup->LoadItemsFromGrp(FullGrpPath);
 
         Application->MessageBox("Item added successfully!", "Success", MB_OK | MB_ICONINFORMATION);
-
-
         ModalResult = mrOk;
     }
     __finally {
@@ -110,16 +97,15 @@ void __fastcall TfrmAddItem::btnSaveClick(TObject *Sender)
         if (ItemList) delete ItemList;
     }
 }
-
-void __fastcall TfrmAddItem::btnOpenFileDialogClick(TObject *Sender)
+void __fastcall TFormAddItem::ButtonOpenFileDialogClick(TObject *Sender)
 {
 
-    openDialog->Filter = "Programs & Control Panel (*.exe;*.cpl)|*.exe;*.cpl|Executable Files (*.exe)|*.exe|Control Panel Files (*.cpl)|*.cpl";
+    OpenDialog->Filter = "Programs & Control Panel (*.exe;*.cpl)|*.exe;*.cpl|Executable Files (*.exe)|*.exe|Control Panel Files (*.cpl)|*.cpl";
 
-    if (openDialog->Execute())
+    if (OpenDialog->Execute())
     {
-        fldPath->Text = openDialog->FileName;
-        AnsiString OnlyName = ExtractFileName(openDialog->FileName);
-        fldTitle->Text = FormatTitle(OnlyName);
+        FieldPath->Text = OpenDialog->FileName;
+        AnsiString OnlyName = ExtractFileName(OpenDialog->FileName);
+        FieldTitle->Text = FormatTitle(OnlyName);
     }
 }

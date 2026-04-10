@@ -8,26 +8,26 @@
 #include <ImgList.hpp>
 #include <Menus.hpp>
 
-class TfrmGroup : public TForm {
+class TFormGroup : public TForm {
 __published:
-    TListView *lvIcons;
-    TImageList *imgIcons;
+    TListView *ListViewItem;
+    TImageList *ImageIcons;
     TPopupMenu *PopUpMenu;
     TMenuItem *AddItem;
     TMenuItem *DeleteThisGroup;
     TMenuItem *DeleteItem;
     void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
-    void __fastcall lvIconsDblClick(TObject *Sender);
-    void __fastcall lvIconsDeletion(TObject *Sender, TListItem *Item);
+    void __fastcall ListViewItemDblClick(TObject *Sender);
+    void __fastcall ListViewItemDeletion(TObject *Sender, TListItem *Item);
     void __fastcall DeleteThisGroupClick(TObject *Sender);
     void __fastcall AddItemClick(TObject *Sender);
-    void __fastcall lvIconsContextPopup(TObject *Sender, const TPoint &MousePos, bool &Handled);
+    void __fastcall ListViewItemContextPopup(TObject *Sender, const TPoint &MousePos, bool &Handled);
     void __fastcall DeleteItemClick(TObject *Sender);
 private:
-    AnsiString __fastcall GetWinDirLocal();
+    AnsiString __fastcall GetCurAppDir();
 public:
     void __fastcall LoadItemsFromGrp(AnsiString FileName);
-    __fastcall TfrmGroup(TComponent* Owner);
+    __fastcall TFormGroup(TComponent* Owner);
 };
-extern PACKAGE TfrmGroup *frmGroup;
+extern PACKAGE TFormGroup *FormGroup;
 #endif

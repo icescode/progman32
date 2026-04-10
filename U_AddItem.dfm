@@ -1,10 +1,10 @@
-object frmAddItem: TfrmAddItem
-  Left = 720
-  Top = 626
+object FormAddItem: TFormAddItem
+  Left = 614
+  Top = 329
   BorderStyle = bsDialog
   Caption = 'Add Item'
   ClientHeight = 105
-  ClientWidth = 392
+  ClientWidth = 302
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,7 +16,7 @@ object frmAddItem: TfrmAddItem
   PixelsPerInch = 120
   TextHeight = 16
   object Label1: TLabel
-    Left = 13
+    Left = 2
     Top = 12
     Width = 55
     Height = 16
@@ -24,16 +24,16 @@ object frmAddItem: TfrmAddItem
     Caption = 'App Path'
   end
   object Label2: TLabel
-    Left = 42
+    Left = 31
     Top = 44
     Width = 26
     Height = 16
     Alignment = taRightJustify
     Caption = 'Title'
   end
-  object btnOpenFileDialog: TSpeedButton
-    Left = 360
-    Top = 11
+  object ButtonOpenFileDialog: TSpeedButton
+    Left = 274
+    Top = 9
     Width = 23
     Height = 22
     Glyph.Data = {
@@ -50,43 +50,43 @@ object frmAddItem: TfrmAddItem
       55555575FFF75555555555700007555555555557777555555555555555555555
       5555555555555555555555555555555555555555555555555555}
     NumGlyphs = 2
-    OnClick = btnOpenFileDialogClick
+    OnClick = ButtonOpenFileDialogClick
   end
-  object fldPath: TEdit
-    Left = 80
+  object FieldPath: TEdit
+    Left = 69
     Top = 8
-    Width = 277
+    Width = 200
     Height = 24
     TabOrder = 0
   end
-  object fldTitle: TEdit
-    Left = 80
+  object FieldTitle: TEdit
+    Left = 69
     Top = 40
-    Width = 303
+    Width = 200
     Height = 24
     TabOrder = 1
   end
-  object btnCancel: TButton
-    Left = 227
+  object ButtonCancel: TButton
+    Left = 142
     Top = 75
     Width = 75
     Height = 25
     Caption = '&Cancel'
     TabOrder = 2
-    OnClick = btnCancelClick
+    OnClick = ButtonCancelClick
   end
-  object btnSave: TButton
-    Left = 309
+  object ButtonSave: TButton
+    Left = 224
     Top = 75
     Width = 75
     Height = 25
     Caption = '&Save'
     TabOrder = 3
-    OnClick = btnSaveClick
+    OnClick = ButtonSaveClick
   end
-  object openDialog: TOpenDialog
+  object OpenDialog: TOpenDialog
     DefaultExt = '*.exe'
-    Left = 16
+    Left = 5
     Top = 56
   end
 end

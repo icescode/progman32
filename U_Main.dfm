@@ -1,6 +1,6 @@
-object frmMain: TfrmMain
-  Left = 867
-  Top = 426
+object FormMain: TFormMain
+  Left = 602
+  Top = 336
   Width = 523
   Height = 323
   Caption = 'Program Manager'
@@ -19,6 +19,18 @@ object frmMain: TfrmMain
   OnShow = FormShow
   PixelsPerInch = 120
   TextHeight = 16
+  object BottomStatusBar: TStatusBar
+    Left = 0
+    Top = 256
+    Width = 515
+    Height = 19
+    Panels = <
+      item
+        Text = 'ProgmanX 1.0B'
+        Width = 100
+      end>
+    SimplePanel = False
+  end
   object MainMenu1: TMainMenu
     Left = 120
     Top = 120
@@ -28,26 +40,24 @@ object frmMain: TfrmMain
         Caption = '&New Group'
         OnClick = Open1Click
       end
-      object Delete1: TMenuItem
-        Caption = '&Delete'
-      end
       object Run1: TMenuItem
         Caption = '&Run'
       end
       object ExitWindows1: TMenuItem
-        Caption = 'E&xit Windows'
+        Caption = '&Shut Down Windows'
       end
     end
     object Option1: TMenuItem
-      Caption = '&Option'
-      object AutoArrange1: TMenuItem
-        Caption = '&Auto Arrange'
+      Caption = '&Extra'
+      object AppMonitor1: TMenuItem
+        Caption = '&Apps Monitor'
+        OnClick = AppMonitor1Click
       end
       object MinimizeonUse1: TMenuItem
-        Caption = '&Minimize on Use'
+        Caption = '&Resource Monitor'
       end
-      object SaveSettingonExit1: TMenuItem
-        Caption = '&Save Setting on Exit'
+      object Systool1: TMenuItem
+        Caption = '&Systool'
       end
     end
     object Window1: TMenuItem
@@ -76,7 +86,7 @@ object frmMain: TfrmMain
     object Help1: TMenuItem
       Caption = '&Help'
       object AboutOldcat1: TMenuItem
-        Caption = 'About Oldcat'
+        Caption = 'Aboutt'
       end
     end
   end

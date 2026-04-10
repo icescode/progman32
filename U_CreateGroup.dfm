@@ -1,10 +1,10 @@
-object frmCreateGroup: TfrmCreateGroup
-  Left = 141
-  Top = 597
+object FormCreateGroup: TFormCreateGroup
+  Left = 753
+  Top = 710
   BorderStyle = bsDialog
   Caption = 'New Group'
-  ClientHeight = 96
-  ClientWidth = 317
+  ClientHeight = 74
+  ClientWidth = 248
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,29 +15,36 @@ object frmCreateGroup: TfrmCreateGroup
   Position = poScreenCenter
   PixelsPerInch = 120
   TextHeight = 16
-  object fldTitle: TEdit
+  object Label1: TLabel
     Left = 8
-    Top = 16
-    Width = 297
+    Top = 13
+    Width = 26
+    Height = 16
+    Caption = 'Title'
+  end
+  object FieldTitle: TEdit
+    Left = 40
+    Top = 9
+    Width = 201
     Height = 24
     TabOrder = 0
   end
-  object btnCancel: TButton
-    Left = 147
-    Top = 57
+  object ButtonCancel: TButton
+    Left = 83
+    Top = 42
     Width = 75
     Height = 25
     Caption = '&Cancel'
     TabOrder = 1
-    OnClick = btnCancelClick
+    OnClick = ButtonCancelClick
   end
-  object btnSave: TButton
-    Left = 232
-    Top = 56
+  object ButtonSave: TButton
+    Left = 168
+    Top = 41
     Width = 75
     Height = 25
     Caption = '&Sa&ve'
     TabOrder = 2
-    OnClick = btnSaveClick
+    OnClick = ButtonSaveClick
   end
 end

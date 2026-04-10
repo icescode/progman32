@@ -3,13 +3,15 @@
 <PROJECT>
   <MACROS>
     <VERSION value="BCB.05.03"/>
-    <PROJECT value="oldcar.exe"/>
-    <OBJFILES value="oldcar.obj U_Main.obj U_Group.obj U_CreateGroup.obj U_AddItem.obj"/>
+    <PROJECT value="&quot;Z:\Windows Retro\Development\BorlandCpp5\Output-Release\oldcar.exe&quot;"/>
+    <OBJFILES value="oldcar.obj U_Main.obj U_Group.obj U_CreateGroup.obj U_AddItem.obj 
+      U_ProcessMonitor.obj"/>
     <RESFILES value="oldcar.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
     <DEFFILE value=""/>
-    <RESDEPEN value="$(RESFILES) U_Main.dfm U_Group.dfm U_CreateGroup.dfm U_AddItem.dfm"/>
+    <RESDEPEN value="$(RESFILES) U_Main.dfm U_Group.dfm U_CreateGroup.dfm U_AddItem.dfm 
+      U_ProcessMonitor.dfm"/>
     <LIBFILES value=""/>
     <LIBRARIES value=""/>
     <SPARELIBS value="Vcl50.lib"/>
@@ -49,7 +51,7 @@
   </LINKER>
   <IDEOPTIONS>
 [Version Info]
-IncludeVerInfo=0
+IncludeVerInfo=1
 AutoIncBuild=0
 MajorVer=1
 MinorVer=0
@@ -74,6 +76,27 @@ OriginalFilename=
 ProductName=
 ProductVersion=1.0.0.0
 Comments=
+
+[HistoryLists\hlIncludePath]
+Count=1
+Item0=C:\Program Files\Borland\CBuilder5\Projects\;$(BCB)\include;$(BCB)\include\vcl
+
+[HistoryLists\hlLibraryPath]
+Count=1
+Item0=C:\Program Files\Borland\CBuilder5\Projects\;$(BCB)\lib\obj;$(BCB)\lib
+
+[HistoryLists\hlDebugSourcePath]
+Count=1
+Item0=$(BCB)\source\vcl
+
+[HistoryLists\hlConditionals]
+Count=1
+Item0=_DEBUG
+
+[HistoryLists\hlFinalOutputDir]
+Count=2
+Item0=Z:\Windows Retro\Development\BorlandCpp5\Output-Release\
+Item1=Z:\Windows Retro\Development\BorlandCpp5\Output-Release
 
 [Debugging]
 DebugSourceDirs=$(BCB)\source\vcl

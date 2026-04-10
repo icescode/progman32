@@ -2,19 +2,22 @@
 
 #include <vcl.h>
 #pragma hdrstop
-USERES("oldcar.res");
-USEFORM("U_Main.cpp", frmMain);
-USEFORM("U_Group.cpp", frmGroup);
-USEFORM("U_CreateGroup.cpp", frmCreateGroup);
-USEFORM("U_AddItem.cpp", frmAddItem);
+USERES("ProgmanX.res");
+USEFORM("U_Main.cpp", FormMain);
+USEFORM("U_Group.cpp", FormGroup);
+USEFORM("U_CreateGroup.cpp", FormCreateGroup);
+USEFORM("U_AddItem.cpp", FormAddItem);
+USEFORM("U_ProcessMonitor.cpp", FormProcessMonitor);
+USEFORM("U_Background.cpp", FormBackground);
 //---------------------------------------------------------------------------
 WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
         try
         {
                  Application->Initialize();
-                 Application->CreateForm(__classid(TfrmMain), &frmMain);
-         Application->CreateForm(__classid(TfrmAddItem), &frmAddItem);
+                 Application->Title = "ProgmanX";
+         Application->CreateForm(__classid(TFormMain), &FormMain);
+         Application->CreateForm(__classid(TFormBackground), &FormBackground);
          Application->Run();
         }
         catch (Exception &exception)

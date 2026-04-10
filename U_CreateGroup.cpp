@@ -10,58 +10,55 @@
 #pragma package(smart_init)
 #pragma resource "*.dfm"
 
-TfrmCreateGroup *frmCreateGroup;
+TFormCreateGroup *FormCreateGroup;
 
-__fastcall TfrmCreateGroup::TfrmCreateGroup(TComponent* Owner): TForm(Owner)
+__fastcall TFormCreateGroup::TFormCreateGroup(TComponent* Owner): TForm(Owner)
 {
 }
 
-AnsiString __fastcall TfrmCreateGroup::GetWinDir()
+AnsiString __fastcall TFormCreateGroup::GetCurAppDir()
 {
-    char buffer[MAX_PATH];
-    ::GetWindowsDirectory(buffer, MAX_PATH);
-    AnsiString path = AnsiString(buffer);
+    AnsiString path = ExtractFilePath(Application->ExeName);
+
     if (path.LastDelimiter("\\") != path.Length()) {
         path = path + "\\";
     }
     return path;
 }
-
-void __fastcall TfrmCreateGroup::btnCancelClick(TObject *Sender)
+void __fastcall TFormCreateGroup::ButtonCancelClick(TObject *Sender)
 {
     Close();
 }
 
-void __fastcall TfrmCreateGroup::btnSaveClick(TObject *Sender)
+void __fastcall TFormCreateGroup::ButtonSaveClick(TObject *Sender)
 {
-    AnsiString GroupName = fldTitle->Text.Trim();
-    
+    AnsiString GroupName = FieldTitle->Text.Trim();
+
     if (GroupName.Length() == 0) {
-        return; 
+        return;
     }
 
     for (int i = 1; i <= GroupName.Length(); i++) {
         char c = GroupName[i];
-        bool isValid = (c >= 'A' && c <= 'Z') || 
-                       (c >= 'a' && c <= 'z') || 
-                       (c >= '0' && c <= '9') || 
+        bool isValid = (c >= 'A' && c <= 'Z') ||
+                       (c >= 'a' && c <= 'z') ||
+                       (c >= '0' && c <= '9') ||
                        (c == ' ');
-        
+
         if (!isValid) {
-            Application->MessageBox("Nama group hanya boleh berisi huruf, angka, dan spasi!", 
+            Application->MessageBox("Only A (a) to Z (z) and 0-9 for Group name !",
                                     "Invalid Name", MB_OK | MB_ICONERROR);
-            return; // Gagalkan proses simpan
+            return;
         }
     }
 
-    AnsiString WinDir = GetWinDir();
+    AnsiString AppDir = GetCurAppDir();
     AnsiString GrpFileName = GroupName + ".grp";
-    AnsiString FullGrpPath = WinDir + GrpFileName;
-    AnsiString IniPath = WinDir + "oldcat.ini";
+    AnsiString FullGrpPath = AppDir + GrpFileName;
+    AnsiString IniPath = AppDir + "progmanx.ini";
 
     if (FileExists(FullGrpPath)) {
-        Application->MessageBox("Group already exist please create a new name..",
-                                "Duplicate", MB_OK | MB_ICONWARNING);
+        Application->MessageBox("Group already exist please create a new name..", "Duplicate", MB_OK | MB_ICONWARNING);
         return;
     }
 
@@ -94,5 +91,5 @@ void __fastcall TfrmCreateGroup::btnSaveClick(TObject *Sender)
     }
 
     Application->MessageBox("Group Created Successfully!", "Success", MB_OK | MB_ICONINFORMATION);
-    ModalResult = mrOk; 
+    ModalResult = mrOk;
 }

@@ -1,6 +1,6 @@
-object frmGroup: TfrmGroup
-  Left = 128
-  Top = 283
+object FormGroup: TFormGroup
+  Left = 190
+  Top = 287
   Width = 445
   Height = 294
   Caption = 'Group'
@@ -17,7 +17,7 @@ object frmGroup: TfrmGroup
   OnClose = FormClose
   PixelsPerInch = 120
   TextHeight = 16
-  object lvIcons: TListView
+  object ListViewItem: TListView
     Left = 0
     Top = 0
     Width = 437
@@ -25,14 +25,14 @@ object frmGroup: TfrmGroup
     Align = alClient
     Columns = <>
     IconOptions.AutoArrange = True
-    LargeImages = imgIcons
+    LargeImages = ImageIcons
     ReadOnly = True
     TabOrder = 0
-    OnContextPopup = lvIconsContextPopup
-    OnDblClick = lvIconsDblClick
-    OnDeletion = lvIconsDeletion
+    OnContextPopup = ListViewItemContextPopup
+    OnDblClick = ListViewItemDblClick
+    OnDeletion = ListViewItemDeletion
   end
-  object imgIcons: TImageList
+  object ImageIcons: TImageList
     Height = 32
     Width = 32
     Left = 128

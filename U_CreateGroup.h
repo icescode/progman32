@@ -9,21 +9,22 @@
 #include <StdCtrls.hpp>
 #include <Forms.hpp>
 
-class TfrmCreateGroup : public TForm
+class TFormCreateGroup : public TForm
 {
-__published:	
-    TEdit *fldTitle;
-    TButton *btnCancel;
-    TButton *btnSave;
+__published:
+    TEdit *FieldTitle;
+    TButton *ButtonCancel;
+    TButton *ButtonSave;
+    TLabel *Label1;
 
-    void __fastcall btnCancelClick(TObject *Sender);
-    void __fastcall btnSaveClick(TObject *Sender);
+    void __fastcall ButtonCancelClick(TObject *Sender);
+    void __fastcall ButtonSaveClick(TObject *Sender);
 
 private:
-    AnsiString __fastcall GetWinDir();
+    AnsiString __fastcall TFormCreateGroup::GetCurAppDir();
 
 public:		
-    __fastcall TfrmCreateGroup(TComponent* Owner);
+    __fastcall TFormCreateGroup(TComponent* Owner);
 };
-extern PACKAGE TfrmCreateGroup *frmCreateGroup;
+extern PACKAGE TFormCreateGroup *FormCreateGroup;
 #endif

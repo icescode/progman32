@@ -12,31 +12,31 @@
 
 #pragma package(smart_init)
 #pragma resource "*.dfm"
-TfrmGroup *frmGroup;
 
-__fastcall TfrmGroup::TfrmGroup(TComponent* Owner): TForm(Owner){
+TFormGroup *FormGroup;
+
+__fastcall TFormGroup::TFormGroup(TComponent* Owner): TForm(Owner){
 
 }
-AnsiString __fastcall TfrmGroup::GetWinDirLocal()
+AnsiString __fastcall TFormGroup::GetCurAppDir()
 {
-    char buffer[MAX_PATH];
-    ::GetWindowsDirectory(buffer, MAX_PATH);
-    AnsiString path = AnsiString(buffer);
+    AnsiString path = ExtractFilePath(Application->ExeName);
+
     if (path.LastDelimiter("\\") != path.Length()) {
         path = path + "\\";
     }
     return path;
 }
 
-void __fastcall TfrmGroup::LoadItemsFromGrp(AnsiString FullGrpPath)
+void __fastcall TFormGroup::LoadItemsFromGrp(AnsiString FullGrpPath)
 {
     if (!FileExists(FullGrpPath)) return;
 
     TIniFile *ini = new TIniFile(FullGrpPath);
     TStringList *Lines = new TStringList();
 
-    lvIcons->Items->Clear();
-    imgIcons->Clear();
+    ListViewItem->Items->Clear();
+    ImageIcons->Clear();
 
     try {
         ini->ReadSectionValues("Items", Lines);
@@ -58,11 +58,11 @@ void __fastcall TfrmGroup::LoadItemsFromGrp(AnsiString FullGrpPath)
             if ((int)hIcon > 1) {
                 TIcon *ico = new TIcon();
                 ico->Handle = hIcon;
-                NewIconIndex = imgIcons->AddIcon(ico);
+                NewIconIndex = ImageIcons->AddIcon(ico);
                 delete ico;
             }
 
-            TListItem *Item = lvIcons->Items->Add();
+            TListItem *Item = ListViewItem->Items->Add();
             Item->Caption = Title;
             Item->ImageIndex = NewIconIndex;
             Item->SubItems->Add(FullPath);
@@ -73,16 +73,16 @@ void __fastcall TfrmGroup::LoadItemsFromGrp(AnsiString FullGrpPath)
         delete ini;
     }
 }
-void __fastcall TfrmGroup::FormClose(TObject *Sender, TCloseAction &Action) {
+void __fastcall TFormGroup::FormClose(TObject *Sender, TCloseAction &Action) {
 
     Action = caFree;
 }
 
-void __fastcall TfrmGroup::lvIconsDblClick(TObject *Sender)
+void __fastcall TFormGroup::ListViewItemDblClick(TObject *Sender)
 {
-    if (lvIcons->Selected == NULL || lvIcons->Selected->SubItems->Count == 0) return;
+    if (ListViewItem->Selected == NULL || ListViewItem->Selected->SubItems->Count == 0) return;
 
-    AnsiString FilePath = lvIcons->Selected->SubItems->Strings[0];
+    AnsiString FilePath = ListViewItem->Selected->SubItems->Strings[0];
     AnsiString Ext = ExtractFileExt(FilePath).LowerCase();
 
     if (Ext == ".cpl")
@@ -96,8 +96,7 @@ void __fastcall TfrmGroup::lvIconsDblClick(TObject *Sender)
     }
 }
 
-void __fastcall TfrmGroup::lvIconsDeletion(TObject *Sender,
-      TListItem *Item)
+void __fastcall TFormGroup::ListViewItemDeletion(TObject *Sender,TListItem *Item)
 {
     if (Item->Data != NULL) {
         delete (AnsiString*)Item->Data;
@@ -105,31 +104,41 @@ void __fastcall TfrmGroup::lvIconsDeletion(TObject *Sender,
     }
 }
 
-void __fastcall TfrmGroup::DeleteThisGroupClick(TObject *Sender)
+void __fastcall TFormGroup::DeleteThisGroupClick(TObject *Sender)
 {
-    AnsiString GroupFileName = this->Caption;
-    AnsiString FullGrpPath = GetWinDirLocal() + GroupFileName;
 
-    if (Application->MessageBox("Delete this Group ?", "Confirmation", MB_YESNO | MB_ICONQUESTION) == IDYES)
+    AnsiString GroupFileName = this->Caption + ".grp";
+    AnsiString FullGrpPath = GetCurAppDir() + GroupFileName;
+
+    if (Application->MessageBox(("Delete the group '" + this->Caption + "' and all its items?").c_str(),
+        "Confirmation", MB_YESNO | MB_ICONQUESTION) == IDYES)
     {
+
         if (FileExists(FullGrpPath)) {
-            DeleteFile(FullGrpPath);
+            if (!DeleteFile(FullGrpPath)) {
+                Application->MessageBox("Could not delete physical .grp file. Check permissions.", "Error", MB_OK);
+            }
         }
 
-        AnsiString IniPath = GetWinDirLocal() + "oldcat.ini";
+
+        AnsiString IniPath = GetCurAppDir() + "progmanx.ini";
         if (FileExists(IniPath))
         {
             TIniFile *ini = new TIniFile(IniPath);
             TStringList *TempList = new TStringList();
             try {
+
                 ini->ReadSectionValues("Groups", TempList);
+
+
                 ini->EraseSection("Groups");
 
                 int newIdx = 1;
                 for (int i = 0; i < TempList->Count; i++) {
+
                     AnsiString Val = TempList->Values[TempList->Names[i]];
 
-                    if (Val != GroupFileName) {
+                    if (Val.LowerCase() != GroupFileName.LowerCase()) {
                         ini->WriteString("Groups", "Group" + IntToStr(newIdx), Val);
                         newIdx++;
                     }
@@ -140,12 +149,15 @@ void __fastcall TfrmGroup::DeleteThisGroupClick(TObject *Sender)
                 delete TempList;
             }
         }
+
+
         this->Close();
+
     }
 }
-void __fastcall TfrmGroup::AddItemClick(TObject *Sender)
+void __fastcall TFormGroup::AddItemClick(TObject *Sender)
 {
-    TfrmAddItem *dlg = new TfrmAddItem(this);
+    TFormAddItem *dlg = new TFormAddItem(this);
     try {
 
         dlg->CallerGroup = this;
@@ -156,44 +168,62 @@ void __fastcall TfrmGroup::AddItemClick(TObject *Sender)
     }
 }
 
-void __fastcall TfrmGroup::DeleteItemClick(TObject *Sender)
+void __fastcall TFormGroup::DeleteItemClick(TObject *Sender)
 {
-    if (lvIcons->Selected == NULL) return;
+    if (!ListViewItem->Selected) return;
 
-    AnsiString ItemName = lvIcons->Selected->Caption;
-    AnsiString FullGrpPath = GetWinDirLocal() + this->Caption;
+    AnsiString ItemName = ListViewItem->Selected->Caption;
 
-    if (Application->MessageBox(("Delete this item '" + ItemName + "'?").c_str(), "Confirmation", MB_YESNO | MB_ICONQUESTION) == IDYES)
+
+    AnsiString FullGrpPath = GetCurAppDir() + this->Caption + ".grp";
+
+    if (Application->MessageBox(("Delete this item '" + ItemName + "'?").c_str(),
+        "Confirmation", MB_YESNO | MB_ICONQUESTION) == IDYES)
     {
+        if (!FileExists(FullGrpPath)) {
+            Application->MessageBox("Group file not found!", "Error", MB_OK);
+            return;
+        }
+
         TIniFile *ini = new TIniFile(FullGrpPath);
         TStringList *Lines = new TStringList();
         try {
             ini->ReadSectionValues("Items", Lines);
+
+
             ini->EraseSection("Items");
 
             int newIdx = 1;
             for (int i = 0; i < Lines->Count; i++) {
-                AnsiString Key = Lines->Names[i];
-                AnsiString Val = Lines->Values[Key];
+                AnsiString FullLine = Lines->Strings[i];
+                AnsiString Val = Lines->Values[Lines->Names[i]];
 
-                if (Val.Pos(ItemName + ",") != 1) {
+                int commaPos = Val.Pos(",");
+                AnsiString NameInFile = Val.SubString(1, commaPos - 1);
+
+                if (NameInFile != ItemName) {
                     ini->WriteString("Items", "item" + IntToStr(newIdx), Val);
                     newIdx++;
                 }
             }
+
+
+            delete ini;
+            ini = NULL;
+
+
+            LoadItemsFromGrp(FullGrpPath);
         }
         __finally {
-            delete ini;
+            if (ini) delete ini;
             delete Lines;
         }
-        LoadItemsFromGrp(FullGrpPath);
     }
 }
-
-void __fastcall TfrmGroup::lvIconsContextPopup(TObject *Sender, const TPoint &MousePos, bool &Handled)
+void __fastcall TFormGroup::ListViewItemContextPopup(TObject *Sender, const TPoint &MousePos, bool &Handled)
 {
 
-    TListItem *HitItem = lvIcons->GetItemAt(MousePos.x, MousePos.y);
+    TListItem *HitItem = ListViewItem->GetItemAt(MousePos.x, MousePos.y);
 
     if (HitItem != NULL)
     {
@@ -210,7 +240,7 @@ void __fastcall TfrmGroup::lvIconsContextPopup(TObject *Sender, const TPoint &Mo
         DeleteItem->Visible = false;
     }
 
-    TPoint ScreenPos = lvIcons->ClientToScreen(MousePos);
+    TPoint ScreenPos = ListViewItem->ClientToScreen(MousePos);
     PopUpMenu->Popup(ScreenPos.x, ScreenPos.y);
 
     Handled = true;

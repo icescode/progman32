@@ -3,15 +3,17 @@
 <PROJECT>
   <MACROS>
     <VERSION value="BCB.05.03"/>
-    <PROJECT value="oldcar.exe"/>
-    <OBJFILES value="oldcar.obj U_Main.obj U_Group.obj U_CreateGroup.obj U_AddItem.obj"/>
-    <RESFILES value="oldcar.res"/>
+    <PROJECT value="&quot;Z:\Windows Retro\Development\BorlandCpp5\Output-Release\ProgmanX.exe&quot;"/>
+    <OBJFILES value="ProgmanX.obj U_Main.obj U_Group.obj U_CreateGroup.obj U_AddItem.obj 
+      U_ProcessMonitor.obj U_Background.obj"/>
+    <RESFILES value="ProgmanX.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
     <DEFFILE value=""/>
-    <RESDEPEN value="$(RESFILES) U_Main.dfm U_Group.dfm U_CreateGroup.dfm U_AddItem.dfm"/>
+    <RESDEPEN value="$(RESFILES) U_Main.dfm U_Group.dfm U_CreateGroup.dfm U_AddItem.dfm 
+      U_ProcessMonitor.dfm U_Background.dfm"/>
     <LIBFILES value=""/>
-    <LIBRARIES value=""/>
+    <LIBRARIES value="Vcl50.lib"/>
     <SPARELIBS value="Vcl50.lib"/>
     <PACKAGES value="Vcl50.bpi Vclx50.bpi bcbsmp50.bpi Vcldb50.bpi vclado50.bpi ibsmp50.bpi 
       VCLBDE50.bpi vcldbx50.bpi Qrpt50.bpi TeeUI50.bpi TeeDB50.bpi Tee50.bpi 
@@ -26,8 +28,8 @@
     <RELEASELIBPATH value="$(BCB)\lib\release"/>
     <LINKER value="tlink32"/>
     <USERDEFINES value="_DEBUG"/>
-    <SYSDEFINES value="_RTLDLL;NO_STRICT;USEPACKAGES"/>
-    <MAINSOURCE value="oldcar.cpp"/>
+    <SYSDEFINES value="NO_STRICT"/>
+    <MAINSOURCE value="ProgmanX.cpp"/>
     <INCLUDEPATH value="&quot;C:\Program Files\Borland\CBuilder5\Projects\&quot;;$(BCB)\include;$(BCB)\include\vcl"/>
     <LIBPATH value="&quot;C:\Program Files\Borland\CBuilder5\Projects\&quot;;$(BCB)\lib\obj;$(BCB)\lib"/>
     <WARNINGS value="-w-par"/>
@@ -43,13 +45,13 @@
     <LFLAGS value="-D&quot;&quot; -aa -Tpe -x -Gn -v"/>
   </OPTIONS>
   <LINKER>
-    <ALLOBJ value="c0w32.obj $(PACKAGES) Memmgr.Lib sysinit.obj $(OBJFILES)"/>
+    <ALLOBJ value="c0w32.obj sysinit.obj $(OBJFILES)"/>
     <ALLRES value="$(RESFILES)"/>
-    <ALLLIB value="$(LIBFILES) $(LIBRARIES) import32.lib cp32mti.lib"/>
+    <ALLLIB value="$(LIBFILES) $(LIBRARIES) import32.lib cp32mt.lib"/>
   </LINKER>
   <IDEOPTIONS>
 [Version Info]
-IncludeVerInfo=0
+IncludeVerInfo=1
 AutoIncBuild=0
 MajorVer=1
 MinorVer=0
@@ -74,6 +76,27 @@ OriginalFilename=
 ProductName=
 ProductVersion=1.0.0.0
 Comments=
+
+[HistoryLists\hlIncludePath]
+Count=1
+Item0=C:\Program Files\Borland\CBuilder5\Projects\;$(BCB)\include;$(BCB)\include\vcl
+
+[HistoryLists\hlLibraryPath]
+Count=1
+Item0=C:\Program Files\Borland\CBuilder5\Projects\;$(BCB)\lib\obj;$(BCB)\lib
+
+[HistoryLists\hlDebugSourcePath]
+Count=1
+Item0=$(BCB)\source\vcl
+
+[HistoryLists\hlConditionals]
+Count=1
+Item0=_DEBUG
+
+[HistoryLists\hlFinalOutputDir]
+Count=2
+Item0=Z:\Windows Retro\Development\BorlandCpp5\Output-Release\
+Item1=Z:\Windows Retro\Development\BorlandCpp5\Output-Release
 
 [Debugging]
 DebugSourceDirs=$(BCB)\source\vcl
